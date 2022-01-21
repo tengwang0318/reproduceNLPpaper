@@ -38,10 +38,13 @@ class InterpretationModel(nn.Module):
 
     def forward(self, h_ij, span_masks):
         o_ij = self.h_t(h_ij).squeeze(-1)
+        # (bs, span_num)
         o_ij = o_ij - span_masks
+        # (bs, span_num) to get the possibility of every pair of sub-words.
         a_ij = nn.functional.softmax(o_ij, dim=1)
+        # h_ij size is (bs, span_num, hidden_size)
+        H = (a_ij.unsqueeze(-1) * h_ij).sum(dim=1)
 
-        H = (a_ij.unsqueeze(-1) * h_ij).sum(dim=-1)
         return H, a_ij
 
 
@@ -63,5 +66,3 @@ class ExplainableModel(nn.Module):
         H, a_ij = self.interpretation(h_ij, span_masks)
         output = self.output(H)
         return output, a_ij
-
-
