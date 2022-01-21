@@ -62,7 +62,7 @@ class MyDataset(Dataset):
         end_indexs = torch.LongTensor(end_indexs)
         span_masks = torch.LongTensor(span_masks)
 
-        return input_ids, attention_mask, label, start_indexs, end_indexs, span_masks
+        return input_ids, attention_mask, label, span_masks
 
 
 def test():
@@ -76,6 +76,3 @@ def test():
         print(end_indexs)
         print(span_masks)
         break
-
-
-
